@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRC</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Add SweetAlert2 CSS and JS files in your <head> section if not already added -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+   <style>
+    body{
+      background-color: #e8e8e8;
+      font-family: 'Arial', sans-serif;
+    }
+
+     .img-fluid{
+      margin-top: 30px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 80%;
+    }
+
+    .logo {
+    font-family: 'Montserrat', sans-serif;
+
+  }
+
+  .forC {color: #ffffff;}
+  .forR {color: #cccccc;}
+  .forC2 {color: #747474;}
+
+
+  .xcard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 260px;
+  padding: 20px 1px;
+  margin: 10px 0;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(125, 169, 204, 0.4),0 4px 6px -4px rgba(33,150,243,.4);
+  border-radius: 10px;
+  background-color: #6B6ECC;
+  background: linear-gradient(45deg, #3b3c47ea 0%, #778992 100%);
+}
+
+.xcontent .xtitle {
+  font-weight: 800;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.64);
+  margin-top: 10px;
+  font-size: 25px;
+}
+
+.bg-carlist {
+  color: #bbbbbb;
+  background: linear-gradient(45deg, #414149ea 0%, #212121 100%);
+}
+.bg-carlist:hover {
+  border: 1px solid black;
+  transform: scale(1.05);
+}
+.bg-carlist .btn { color: #bbbbbb; }
+
+   .navforlink{
+    font-family: 'Arial', sans-serif;
+    padding: 10px 20px;
+    border: none;
+  }
+
+  .navforlink:hover {
+    border: 1px solid black;
+    background-color: #939e9e;
+    padding: 10px;
+    border-radius: 10px;
+    transform: scale(1.05);
+  }
+
+  .navprofile{
+    font-family: 'Arial', sans-serif;
+    padding: 10px 20px;
+    font-weight: bold;
+
+  }
+
+  .nav-Act .active{
+    background-color: #1fcac432;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+  }
+    </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid mx-4">
+        <a class="navbar-brand fw-bold logo" href="{{ url_for('.home_page') }}">
+          <img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block " alt="">
+        </a>
+        <button type="button" class="navbar-toggler my-3" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"><span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <div class="navbar-nav ms-auto nav-Act">
+            <a class="nav-item nav-link mx-2 my-2 navforlink text-center" href="{{ url_for('.home_page') }}" data-toggle="tooltip" title="Go Home Page">Home</a>
+            <a class="nav-item nav-link mx-2 my-2 navforlink active text-center" href="{{ url_for('.car_list') }}" data-toggle="tooltip" title="View Car List">Car List</a>
+            <a class="nav-item nav-link mx-2 my-2 navregister navforlink text-center" href="{{ url_for('.Register_Customer') }}" data-toggle="tooltip" title="Create an account">Register</a>
+            <a class="nav-item nav-link mx-2 my-2 navlogin navforlink text-center" href="{{ url_for('.Customer_LogIn') }}" data-toggle="tooltip" title="Sign in an account">Log In</a>
+            <a class="nav-item nav-link mx-2 my-2 navprofile text-black bg-dark-subtle rounded-pill text-center" data-toggle="tooltip" title="CRC Account ( {{session.FirstName}} ) | UserName ( {{session.UserName}} )" data-bs-toggle="modal" data-bs-target="#MadalLogOut" style="cursor: pointer;"><i class="fa-solid fa-user"></i>&ensp;| {{session.FirstName}}</a>
+          </div>
+        </div>
+    </div>
+  </nav>
+
+        <main role="main">
+        <div class="album ">
+        <div class="container py-3">
+
+          <div class="xcard w-100">
+            <div class="xcontent">
+              <div class="xtitle mb-2">CAR FOR RENT</div>
+            </div>
+          </div>
+
+
+{% block content %}
+
+          <div class="row">
+              {% for car in rows_car_list %}
+            <div class="col-md-4">
+              <div class="card my-3 shadow-sm bg-carlist" >
+
+                 <img src="{{ url_for('static', filename='image/' + car.Image) }}" alt="Image" class="img-fluid">
+
+                  <div class="card-body">
+                  <p class="card-text text-center fw-light text-white-50">Car Details</p>
+                  <p class="card-text text-center">{{ car.Car_Name }}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    Manila | Pampanga<br>&#8369; {{ car.Car_Price_NoPromo }} | Per-Day<br>No Driver | No Gas</small>
+                    <small><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    Manila | Pampanga<br>&#8369; {{ car.Car_Price_WithPromo }} | Per-Day<br>With Driver | Gas | Toll Gate</small>
+                  </div>
+
+                  </div>
+                    <div class="btn-group px-2 mb-2">
+                      <a type="button" class="btn btn-sm btn-outline-secondary rentnowbtn" href="{{ url_for('.view_rent_forms',id = car.CarNo) }}"><i class="fa-solid fa-car-rear fa-lg"></i>&ensp;RENT NOW</a>
+                    </div>
+
+              </div>
+            </div>
+  {% endfor %}
+              </div>
+
+            </div>
+
+ {% endblock %}
+
+          <footer class="bg-dark text-center text-white">
+          <!-- Grid container -->
+          <div class="container p-4 pb-0">
+            <!-- Section: Social media -->
+            <section class="mb-4">
+
+
+              <!-- Home -->
+              <a class="btn btn-outline-light btn-floating m-1" href="{{ url_for('.home_page') }}" role="button">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+               <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
+                </svg><br>Home Page</a>
+
+            </section>
+
+            <div class="text-center">
+              <small class="mr-3"><i class="fa-solid fa-phone"></i> Contact As: 09123456789</small>&emsp;
+              <small><i class="fa-solid fa-location-dot"></i> Address: Barangay Pulong Santol, Porac, Pampanga</small>
+            </div><br>
+            <!-- Section: Social media -->
+          </div>
+
+          <!-- Copyright -->
+          <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2020 Copyright:
+            <a class="text-white" href="https://getbootstrap.com/">Bootstrap.com</a>
+          </div>
+          <!-- Copyright -->
+        </footer>
+
+        </div>
+         </main>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the navprofile element
+        var navProfile = document.querySelector(".navprofile");
+
+        var navLogin = document.querySelector(".navlogin");
+        var navRegister = document.querySelector(".navregister");
+        // Get the "CustomerID" from the session
+        var sessionCustomerID = "{{ session.CustomerID }}";
+
+        // Get an array of "CustomerID" from rows_customer_info
+        var AllOngoincustomerIDs = [
+            {% for customer in rows_customer_info %}
+                "{{ customer.id }}",
+            {% endfor %}
+        ];
+        // Check if {{session.FirstName}} is null or empty
+        var sessionFirstName = "{{session.FirstName}}";
+        if (!sessionFirstName || sessionFirstName.trim() === "") {
+            // If it's null or empty, hide the navprofile
+            navProfile.style.display = "none";
+
+            // Add a click event listener to the "rentnowbtn" buttons
+            var rentNowButtons = document.querySelectorAll(".rentnowbtn");
+            rentNowButtons.forEach(function(button) {
+                button.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: '<img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="90" height="40" class="d-inline-block"><br>You are not allow to rent',
+                        text: 'You need to register or sign-in before renting a car!',
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        footer: '<a class="btn btn-dark w-100" href="{{ url_for('.Customer_LogIn') }}" role="button">Sign In Now</a>&ensp;<a class="btn btn-dark w-100" href="{{ url_for('.Register_Customer') }}" role="button">Register Now</a>'
+                    });
+                });
+            });
+        }
+        else if (AllOngoincustomerIDs.includes(sessionCustomerID)) {
+            // If it's null or empty, hide the navprofile
+            navProfile.style.display = "block";
+            navLogin.style.display = "none";
+            navRegister.style.display = "none";
+
+            // Add a click event listener to the "rentnowbtn" buttons
+            var rentNowButtons = document.querySelectorAll(".rentnowbtn");
+
+            rentNowButtons.forEach(function(button) {
+                button.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: '<img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="90" height="40" class="d-inline-block"><br>You have ongoing booking',
+                        text: 'You are not alow to rent',
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                    });
+                });
+            });
+        } else {
+            // If it's not null or empty, show the navprofile
+            navProfile.style.display = "block";
+
+            navLogin.style.display = "none";
+            navRegister.style.display = "none";
+            // Proceed with the rent process
+            window.location = button.getAttribute("href");
+        }
+
+    });
+
+    function LogoutconfirmAction() {
+    var confirmation = confirm('{{session.FirstName}} Are you sure want to Log out ?');
+    return confirmation;
+    }
+</script>
+
+<!-- ============================================================================================================================================ -->
+
+<!-- Modal LOG-OUT -->
+<div class="modal fade" id="MadalLogOut" tabindex="-1" aria-labelledby="madalforLogOut" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title fs-5 fw-bold" id="madalforLogOut">Profile</div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <center><img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block"></center>
+
+          <div class="container text-center my-5">
+              <div class="row">
+                <div class="col-sm">
+                  <p><strong class="h4">{{ session.FirstName }} {{ session.LastName }}</strong><br><small class="text-body-tertiary">Name</small></p>
+                </div>
+                <div class="col-sm">
+                  <p><strong class="h4">{{ session.UserName }}</strong><br><small class="text-body-tertiary">User Name</small></p>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center">
+                    <a class="btn btn-secondary my-2" href="{{ url_for('.View_Profile') }}" data-toggle="tooltip" title="View more Information" role="button"><i class="fa-solid fa-arrow-up-right-from-square"></i>&emsp;View Profile</a>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer bg-light">
+        <a class="btn btn-dark w-100" href="{{ url_for('logout') }}" data-toggle="tooltip" title="Sign out" onclick="return LogoutconfirmAction();" role="button"><i class="fa-solid fa-right-from-bracket cssicon"></i>&emsp;Sign out</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

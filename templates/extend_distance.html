@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRC | ADMIN</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+</head>
+<style>
+  body{
+    background-color: #404158;
+    font-family: 'Arial', sans-serif;
+
+    }
+  .hidden {
+    display: none;
+    }
+    .cust_name{
+      color: rgb(72, 92, 137);
+    }
+  .txtColor {
+    color: #919191;
+  }
+</style>
+<body>
+
+
+
+  <div class="row mx-4 my-5">
+    <div class="col bg-dark-subtle border border-dark rounded"><!--Start-->
+
+        <a class="" href="{{ url_for('.admin_booking_ongoing') }}"><button type="button" class="btn-close bg-danger-subtle my-2"></button></a>
+
+          <h4 class="text-info-emphasis text-center fw-bold">Extend Distance</h4>
+        <div class="border-2 border-top border-dark-subtle"></div>
+
+
+    <div class="row my-2">
+        <div class="col-sm ">
+            <div class="my-2 text-center">
+            <h3 class="cust_name fw-bold">{{ row['Last_Name'] }}, {{ row['First_Name'] }}</h3>
+            <small class="text-body-tertiary">Customer Name</small>
+            </div>
+        </div>
+
+
+    </div>
+
+<div class="card-body">
+<form action="/update_extend_distance" method="POST" name="frmUpdate" id="frmUpdate">
+
+    <div class="card bg-body-secondary border border-dark-subtle border-3">
+
+      <div class="card-body">
+
+
+
+
+
+        <div class="row mx-2 mb-4 d-flex align-items-center">
+            <div class="col-sm my-1">
+                <h5 class="txtColor fw-bold text-center">{{ row['Car_Name'] }}</h5>
+                <input type="text" readonly class="form-control-plaintext text-center txtColor h5 hidden" name="txtCarname" id="txtCarname" value="{{ row['Car_Name'] }}">
+                <p class="text-center text-body-tertiary"><small>Car Name</small></p>
+            </div>
+
+            <div class="col-sm my-1 ">
+                <input type="text" readonly class="form-control-plaintext text-center txtColor h5 fw-bold" name="txtuserid" id="txtuserid" value="{{ row['id'] }}">
+                <p class="text-center text-body-tertiary"><small>Customer ID #</small></p>
+            </div>
+            <div class="col-sm my-1 bg-secondary-subtle border border-dark-subtle rounded">
+          <div class="form-group my-3">
+                <input type="number" class="form-control-plaintext text-center border border-dark-subtle rounded-bottom border-3 bg-body-tertiary"  name="txtnokm" id="txtnokm"  min="1" max="200" placeholder="how many kilometer" required>
+                <p class="text-center text-body-tertiary"><small>Add Distance (Kilometer)</small></p>
+                <input type="number" class="form-control-plaintext text-center border border-dark-subtle rounded-bottom border-3 bg-body-tertiary"  name="txtkm_price" id="txtkm_price" min="1" max="100" placeholder="kilometer price" required>
+                <p class="text-center text-body-tertiary"><small>Kilometer Price</small></p>
+          </div>
+
+            </div>
+        </div>
+
+        <div class="border-2 border-top border-dark-subtle"></div>
+
+          <div class="row mx-2">
+          <div class="col-sm-4 my-2">
+            <label for="totalkmprice">Total Kilometer Price :</label>
+            <input type="number" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="totalkmprice" id="totalkmprice" placeholder="total kilometer price">
+          </div>
+        </div>
+
+        <div class="row mx-2">
+          <div class="col-sm my-2 ">
+            <label for="txtpickup">Date of Pickup :</label>
+            <input type="date" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="txtpickup" id="txtpickup" value="{{ row['Date_of_pickup'] }}">
+          </div>
+          <div class="col-sm my-2">
+            <label for="txtreturn">Date of Return :</label>
+            <input type="date" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="txtreturn" id="txtreturn" value="{{ row['Date_of_return'] }}">
+          </div>
+          <div class="col-sm my-2">
+            <label for="txttime">Time of Pickup :</label>
+            <input type="text" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="txttime" id="txttime" value="{{ row['Time_of_pickup'] }}">
+          </div>
+        </div>
+
+        <div class="row mx-2">
+          <div class="col-sm my-2">
+            <label for="txtNoofDays">No of Days :</label>
+            <input type="number" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="txtNoofDays" id="txtNoofDays" value="{{ row['No_of_Days'] }}">
+          </div>
+          <div class="col-sm my-2">
+            <label for="txtcar_per_day">Car Per-Days :</label>
+            <input type="number" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="txtcar_per_day" id="txtcar_per_day" value="{{ row['Car_per_days'] }}">
+          </div>
+          <div class="col-sm my-2">
+            <label for="txtdownpayment">Down Payment :</label>
+            <input type="number" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="txtdownpayment" id="txtdownpayment" value="{{ row['Down_Payment'] }}">
+          </div>
+        </div>
+
+        <div class="row mx-2">
+          <div class="col-sm my-2">
+            <label for="txtAmount2Pay">Amount to Pay :</label>
+            <input type="number" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="txtAmount2Pay" id="txtAmount2Pay" value="{{ row['Amount_to_Pay'] }}">
+          </div>
+          <div class="col-sm my-2">
+            <label for="txtTotalAmount2Pay">Total Amount to Pay :</label>
+            <input type="number" readonly class="form-control-plaintext text-center border border-dark-subtle rounded-bottom txtColor" name="txtTotalAmount2Pay" id="txtTotalAmount2Pay" value="{{ row['Total_Amount_to_Pay'] }}">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+      <div class="form-group my-2 mx-2">
+          <button type="submit" class="form-control btn btn-secondary mb-2 btn-lg" id="btnSubmit">Submit</button>
+      </div>
+</form>
+ </div>
+    </div><!--End-->
+
+  </div>
+<script>
+    // Function to calculate and update the total kilometer price
+    function updateTotalKilometerPrice() {
+        var nokm = parseFloat(document.getElementById("txtnokm").value);
+        var kmPrice = parseFloat(document.getElementById("txtkm_price").value);
+
+        if (!isNaN(nokm) && !isNaN(kmPrice)) {
+            var totalKmPrice = nokm * kmPrice;
+            document.getElementById("totalkmprice").value = totalKmPrice;
+            updateCarPerDay(totalKmPrice);
+            updateAmountToPay();
+            updateTotalAmountToPay();
+        }
+    }
+
+    // Function to update txtcar_per_day based on the total kilometer price
+    function updateCarPerDay(totalKmPrice) {
+        var carPerDay = 1500; // Initial value
+        if (!isNaN(totalKmPrice)) {
+            carPerDay += totalKmPrice;
+        }
+        document.getElementById("txtcar_per_day").value = carPerDay;
+    }
+
+    // Function to update txtAmount2Pay based on txtcar_per_day and txtNoofDays
+    function updateAmountToPay() {
+        var carPerDay = parseFloat(document.getElementById("txtcar_per_day").value);
+        var noOfDays = parseFloat(document.getElementById("txtNoofDays").value);
+
+        if (!isNaN(carPerDay) && !isNaN(noOfDays)) {
+            var amountToPay = carPerDay * noOfDays;
+            document.getElementById("txtAmount2Pay").value = amountToPay;
+        }
+    }
+
+    // Function to update txtTotalAmount2Pay based on txtAmount2Pay and txtdownpayment
+    function updateTotalAmountToPay() {
+        var amountToPay = parseFloat(document.getElementById("txtAmount2Pay").value);
+        var downPayment = parseFloat(document.getElementById("txtdownpayment").value);
+
+        if (!isNaN(amountToPay) && !isNaN(downPayment)) {
+            var totalAmountToPay = amountToPay - downPayment;
+            document.getElementById("txtTotalAmount2Pay").value = totalAmountToPay;
+        }
+    }
+
+    // Add event listeners to trigger the calculation when input fields change
+    document.getElementById("txtnokm").addEventListener("input", updateTotalKilometerPrice);
+    document.getElementById("txtkm_price").addEventListener("input", updateTotalKilometerPrice);
+    document.getElementById("txtNoofDays").addEventListener("input", updateAmountToPay);
+    document.getElementById("txtdownpayment").addEventListener("input", updateTotalAmountToPay);
+
+    // Initial calculation
+    updateTotalKilometerPrice();
+</script>
+
+
+
+</body>
+</html>

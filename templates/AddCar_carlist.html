@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRC | ADMIN</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<style>
+  body{
+    background-color: #404158;
+    font-family: 'Arial', sans-serif;
+
+  }
+    .cust_name{
+      color: rgb(72, 92, 137);
+    }
+</style>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm d-flex justify-content-center align-items-center">
+
+      <div class="card border border-dark-subtle border-3 bg-dark-subtle rounded-4 shadow-lg my-4" style="width: 50rem;">
+        <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <a class="" href="{{ url_for('.View_Admin_CarList') }}"><button type="button" class="btn-close bg-danger-subtle"></button></a>
+          <img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="80" height="40" class="d-inline-block">
+        </div>
+          <div class="card-title text-center fw-bold text-info-emphasis h3 my-3">ADD CAR</div>
+          <div class="border-bottom border-2 border-dark-subtle"></div>
+
+<form action="/save_addCar" method="POST" enctype="multipart/form-data">
+            <!-- INSERT ROW FOR Car Name -->
+            <div class="row">
+              <div class="col-sm my-2">
+                <label for="txtaddCarName">Car Name *</label>
+                <input type="text" class="form-control input-user text-body-secondary" name="txtaddCarName" id="txtaddCarName" placeholder="enter the car name" required>
+              </div>
+            </div>
+            <!-- INSERT ROW FOR Car Car Price No Promo | Car Price With Promo -->
+            <div class="row">
+              <div class="col-sm my-2">
+                <label for="txtaddCarPriceNoPromo">Car Price NoPromo ( Pampanga/Manila )  *</label>
+                <input type="number" step="any" class="form-control input-user text-body-secondary" name="txtaddCarPriceNoPromo" id="txtaddCarPriceNoPromo" min="1" max="10000" placeholder="enter a price from pampanga to manila" required>
+              </div>
+              <div class="col-sm my-2">
+                <label for="txtaddCarPriceWithPromo">Car Price WithPromo ( Pampanga/Manila ) * </label>
+                <input type="number" step="any" class="form-control input-user text-body-secondary" name="txtaddCarPriceWithPromo" id="txtaddCarPriceWithPromo" min="1" max="10000" placeholder="enter a price from pampanga to manila" required>
+              </div>
+            </div>
+
+            <!-- INSERT ROW FOR Car Image -->
+            <div class="row">
+              <div class="col-sm my-2">
+                 <label for="imageUpload" class="form-label">Upload an image for Car: *</label>
+                 <input class="form-control text-body-secondary" type="file" name="imageUpload" id="imageUpload" accept="image/*">
+              </div>
+            </div>
+
+          <div class="row">
+            <div class="col-sm my-4">
+              <button type="submit" class="form-control btn btn-secondary mb-2 btn-lg" id="btnSubmit">Submit</button>
+            </div>
+          </div>
+
+</form>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      // Check if the imageUpload input field has a value
+      const imageUpload = document.getElementById("imageUpload");
+      if (imageUpload && !imageUpload.files.length) {
+        Swal.fire({
+          title: "Please Upload A Image For Car",
+          text: "You must upload a Car image.",
+          icon: "error",
+        });
+        return; // Stop form submission
+      } else {
+        // Submit the form if age is allowed and an image is uploaded
+        form.submit();
+      }
+    });
+  });
+</script>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

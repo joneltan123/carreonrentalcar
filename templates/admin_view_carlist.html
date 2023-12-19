@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRC | ADMIN</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Add SweetAlert2 CSS and JS files in your <head> section if not already added -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<style>
+  body{
+    background-color: #e8e8e8;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .admincss {color: #9e2b2b; font-family: 'Arial', sans-serif;}
+
+  .xcard {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    padding: 20px 1px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+
+    border-radius: 10px;
+    background-color: #6B6ECC;
+    background: linear-gradient(45deg, #65858fea 0%, #6f98b1 100%);
+  }
+
+  .xcontent .xtitle {
+    font-weight: 800;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.64);
+    margin-top: 10px;
+    font-size: 25px;
+  }
+
+  .table-wrap {
+    display:block;
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+
+  .table-css{
+  height: 500px;
+  font-family: 'Arial', sans-serif;
+  }
+
+  .car-booked .btn{ background-color: #2f2f3b; border: none; font-family: 'Arial', sans-serif;}
+  .car-booked .btn:hover{ background-color: #347c4c; border: none; }
+
+  .navforlink{
+    font-family: 'Arial', sans-serif;
+    padding: 10px 20px;
+    border: none;
+  }
+
+  .navforlink:hover {
+    border: 1px solid black;
+    background-color: #939e9e;
+    padding: 10px;
+    border-radius: 10px;
+    transform: scale(1.05);
+  }
+
+  .nav-Act .active{
+    background-color: #1fcac432;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .cssicon {
+    font-size: 23px; /* Adjust the size as needed */
+  }
+</style>
+
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand mx-4 fw-bold logo" href="{{ url_for('AdminLogout') }}" data-bs-toggle="modal" data-bs-target="#MadalLogOut"><img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block " alt=""></a>
+
+      <button type="button" class="navbar-toggler my-3 mx-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button>
+
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto nav-Act">
+          <a class="nav-item nav-link mx-2 my-2 navforlink text-center" href="{{ url_for('.admin_booking_ongoing') }}" data-toggle="tooltip" title="View ongoing booking">Ongoing Booked</a>
+          <a class="nav-item nav-link mx-2 my-2 navforlink text-center" href="{{ url_for('.admin_booking_completed') }}" data-toggle="tooltip" title="View completed booking">Booking Completed</a>
+          <a class="nav-item nav-link mx-2 my-2 navforlink text-center active" href="{{ url_for('.View_Admin_CarList') }}" data-toggle="tooltip" title="View Car List"><i class="fa-solid fa-list-ul"></i>&ensp;Car List</a>
+          <a class="nav-item nav-link mx-2 my-2 navforlink text-center" href="{{ url_for('AdminLogout') }}" data-toggle="tooltip" title="Sign out" data-bs-toggle="modal" data-bs-target="#MadalLogOut"><i class="fa-solid fa-right-from-bracket cssicon"></i></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="row my-3 mx-2 ">
+    <div class="col">
+
+      <div class="card my-2">
+
+        <div class="card-header xcard">
+          <div class="xcontent">
+            <div class="xtitle mb-2">CRC Cars</div>
+          </div>
+        </div>
+
+    <div class="card-body bg-dark text-white">
+    <form class="form-inline my-2 my-lg-0" method="POST">
+        <div class="row mx-1">
+            <div class="col-md-auto text-center">
+                <a class="btn border rounded-pill border-primary-subtle text-primary w-100 my-2" data-toggle="tooltip" title="Admin Profile" data-bs-toggle="modal" data-bs-target="#MadalAdminProfile"><i class="fa-regular fa-user"></i>&ensp;|&ensp;{{session.AdminFirstName}}</a>
+            </div>
+            <div class="col-sm text-center">
+
+                <div class="input-group my-2">
+                  <input type="text" class="form-control" name="Search" id="Search" placeholder="Search">
+                    <button class="btn btn-dark border-light" type="submit" data-toggle="tooltip" title="Search Car Name"><i class="fa-solid fa-magnifying-glass"></i>&ensp;Search</button>
+
+                </div>
+
+            </div>
+            <div class="col-md-auto text-center">
+                <a class="btn btn-secondary my-2 w-100" href="{{ url_for('.View_Admin_CarList') }}" data-toggle="tooltip" title="View all record"><i class="fa-solid fa-arrows-rotate"></i>&ensp;Refresh</a>
+            </div>
+            <div class="col-md-auto text-center">
+                <a class="btn btn-secondary my-2 w-100" href="{{ url_for('.View_Admin_AddCar') }}" data-toggle="tooltip" title="Add Car in List"><i class="fa-solid fa-plus"></i>&ensp;Add Car</a>
+            </div>
+
+        </div>
+    </form>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dark text-center my-2 fw-bold text-warning-emphasis alert-dismissible fade show" role="alert">
+         {{ message }}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}
+
+        <p class="border-bottom my-3"></p>
+        <div class="table-wrap my-2 ">
+          <table id="data" class="table table-dark table-css table-hover table-responsive-sm my-2 w-100">
+              <thead class="table-info">
+                <tr>
+
+                  <th>Car No.</th>
+                  <th>Car Name</th>
+                  <th>Pampanga to Manila Price No Promo</th>
+                  <th>Pampanga to Manila Price With Promo</th>
+
+
+                  <th class="text-center" colspan="3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for user in rows %}
+                <tr>
+
+                  <td>{{ user['CarNo'] }}</td>
+                  <td>{{ user['Car_Name'] }}</td>
+                  <td>{{ user['Car_Price_NoPromo'] }}</td>
+                  <td>{{ user['Car_Price_WithPromo'] }}</td>
+
+
+                  <td class="text-light"><a href="{{ url_for('.View_Admin_CarInfo',id = user['CarNo']) }}"><button class="btn btn-outline-info btn-sm w-100 p-3 d-inline-block" >VIEW CAR INFO</button></a></td>
+                  <td class="text-light"><a href="{{ url_for('.View_Edit_CarInfo',id = user['CarNo']) }}"><button class="btn btn-outline-warning btn-sm w-100 p-3 d-inline-block" >EDIT</button></a></td>
+                  <td class="text-light"><a href="{{ url_for('.delete_cars',id = user['CarNo']) }}"><button class="btn btn-outline-danger btn-sm w-100 p-3 d-inline-block" onclick="return DeleteConfirmAction();">DELETE</button></a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        </div>
+        {% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+function DeleteConfirmAction() {
+    var confirmation = confirm('Are you sure you want to delete this car in list?');
+    return confirmation;
+}
+</script>
+<script>
+  function toggleNewPasswordVisibility() {
+      var passwordInput = document.getElementById("changepassword");
+      if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+      } else {
+          passwordInput.type = "password";
+      }
+    }
+
+  function toggleOldPasswordVisibility() {
+      var passwordInput = document.getElementById("oldpassword");
+      if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+      } else {
+          passwordInput.type = "password";
+      }
+    }
+
+  function toggleAddAdminPasswordVisibility() {
+      var passwordInput = document.getElementById("addadminpassword");
+      if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+      } else {
+          passwordInput.type = "password";
+      }
+    }
+</script>
+
+<!-- ============================================================================================================================================ -->
+
+<!-- Modal LOG-OUT -->
+<div class="modal fade" id="MadalLogOut" tabindex="-1" aria-labelledby="madalforLogOut" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title fs-5" id="madalforLogOut"><img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block"></div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Admin {{session.AdminFirstName}} are you sure want to Log out ?
+      </div>
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a class="btn btn-secondary mx-2 text-center" href="{{ url_for('AdminLogout') }}" data-toggle="tooltip" title="Sign out">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal View Admin Profile -->
+<div class="modal fade" id="MadalAdminProfile" tabindex="-1" aria-labelledby="madalforAdminProfile" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title fs-5" id="madalforAdminProfile"><img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block"></div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <h2 class="text-center">CRC Admin Profile</h2>
+          <div class="card">
+                  <div class="card-body bg-secondary rounded-3">
+
+                    <div class="card my-3">
+                      <div class="card-header bg-dark-subtle">Admin Name</div>
+                      <div class="card-body text-center">
+                        <h5 class="card-title">{{session.AdminFirstName}} {{session.AdminLastName}}</h5>
+                      </div>
+                    </div>
+
+                    <div class="card my-3">
+                      <div class="card-header bg-dark-subtle">Admin Position</div>
+                      <div class="card-body text-center">
+                        <h5 class="card-title">{{session.AdminPosition}}</h5>
+                      </div>
+                    </div>
+
+                    <div class="card my-3">
+                      <div class="card-header bg-dark-subtle">Admin User Name</div>
+                      <div class="card-body text-center">
+                        <h5 class="card-title">{{session.Admin_UserName}}</h5>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+      </div>
+      <div class="modal-footer bg-light d-flex justify-content-evenly">
+        <a class="link-offset-2 link-underline link-underline-opacity-0 text-body" data-toggle="tooltip" title="Change admin username password" data-bs-toggle="modal" data-bs-target="#MadalChangeadminUnP"><i class="fa-solid fa-user-pen fa-xl"></i></a>
+        <a class="link-offset-2 link-underline link-underline-opacity-0 text-body" data-toggle="tooltip" title="Add Admin" data-bs-toggle="modal" data-bs-target="#MadalAddAdmin"><i class="fa-solid fa-plus fa-xl"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Change Username | Password -->
+<div class="modal fade" id="MadalChangeadminUnP" tabindex="-1" aria-labelledby="madalforChangeadminUnP" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+    <form class='form-changeadmin' id='log-user-form' name="forchangeadmin" action='/changeadmin' method='POST'>
+      <div class="modal-header">
+        <a class="link-offset-2 link-secondary link-underline link-underline-opacity-0"  data-toggle="tooltip" title="Back" data-bs-toggle="modal" data-bs-target="#MadalAdminProfile"><i class="fa-solid fa-angle-left fa-xl"></i></a>&emsp;
+        <div class="modal-title fs-5" id="madalforChangeadminUnP"><img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block"></div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="h5 text-center text-body-secondary mb-4">Change Username | Password</div>
+
+          <div class="container text-center my-2">
+              <div class="row">
+                <div class="col-sm my-2">
+                  <label for="changeusername" class="form-label">New Username</label>
+                  <input type='text' name='changeusername' id='changeusername' class='form-control' placeholder='New Username' pattern="^(?=.*[a-z])(?=.*[0-9])[a-z0-9]+$" minlength="8" required autofocus>
+                </div>
+                <div class="col-sm my-2">
+                  <label for="changepassword" class="form-label">New Password</label>
+                  <input type='password' name='changepassword' id='changepassword' class='form-control' placeholder='New Password' pattern="^\S+$" minlength="8" required>
+                  <div class="form-check form-switch my-1 text-start">
+                    <label class="form-check-label text-body-tertiary" for="showNewPassword">Show Password</label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="showNewPassword" onclick="toggleNewPasswordVisibility()" data-toggle="tooltip" title="Show the password">
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="container text-center my-2">
+              <div class="row">
+                <div class="col-sm my-2">
+                  <label for="oldpassword" class="form-label">Old Password</label>
+                  <input type='password' name='oldpassword' id='oldpassword' class='form-control' placeholder='Old Password' required>
+                  <div class="form-check form-switch my-1 text-start">
+                    <label class="form-check-label text-body-tertiary" for="showOldPassword">Show Password</label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="showOldPassword" onclick="toggleOldPasswordVisibility()" data-toggle="tooltip" title="Show the password">
+                  </div>
+                </div>
+              </div>
+          </div>
+
+      </div>
+      <div class="modal-footer bg-light">
+        <button class='btn btn-primary btn-block w-100' type='submit'>Submit</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Add Admin -->
+<div class="modal fade" id="MadalAddAdmin" tabindex="-1" aria-labelledby="madalforAddAdmin " aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+    <form class='form-addadmin' id='admin-add' name="madalforAddAdmin" action='/add_admin' method='POST'>
+      <div class="modal-header">
+        <a class="link-offset-2 link-secondary link-underline link-underline-opacity-0"  data-toggle="tooltip" title="Back" data-bs-toggle="modal" data-bs-target="#MadalAdminProfile"><i class="fa-solid fa-angle-left fa-xl"></i></a>&emsp;
+        <div class="modal-title fs-5" id="madalforAddAdmin"><img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block"></div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="h5 text-center text-body-secondary mb-4">CREATE NEW ADMIN</div>
+
+          <div class="container text-center my-2">
+              <div class="row">
+                <div class="col-sm my-2">
+                  <label for="addadminFname" class="form-label">Admin First Name</label>
+                  <input type='text' name='addadminFname' id='addadminFname' class='form-control' required autofocus>
+                </div>
+                <div class="col-sm my-2">
+                  <label for="addadminLname" class="form-label">Admin Last Name</label>
+                  <input type='text' name='addadminLname' id='addadminLname' class='form-control' required>
+                </div>
+              </div>
+          </div>
+
+          <div class="container text-center my-2">
+              <div class="row">
+                <div class="col-sm my-2">
+                  <label for="addadminusername" class="form-label">Username</label>
+                  <input type='text' name='addadminusername' id='addadminusername' class='form-control' pattern="^(?=.*[a-z])(?=.*[0-9])[a-z0-9]+$" minlength="8" required>
+                </div>
+                <div class="col-sm my-2">
+                  <label for="addadminpassword" class="form-label">Password</label>
+                  <input type='password' name='addadminpassword' id='addadminpassword' class='form-control' pattern="^\S+$" minlength="8" required>
+                  <div class="form-check form-switch my-1 text-start">
+                    <label class="form-check-label text-body-tertiary" for="showNewPassword">Show Password</label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="showNewPasswordx" onclick="toggleAddAdminPasswordVisibility()" data-toggle="tooltip" title="Show the password">
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="container text-center my-2">
+              <div class="row">
+                <div class="col-sm my-2">
+                  <label for="adminposition" class="form-label">Admin Position in CRC</label>
+                  <input type='text' name='adminposition' id='adminposition' class='form-control' required>
+                </div>
+              </div>
+          </div>
+
+      </div>
+      <div class="modal-footer bg-light">
+        <button class='btn btn-primary btn-block w-100' type='submit'>Submit</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

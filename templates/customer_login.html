@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRC</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<script>
+  function togglePasswordVisibility() {
+      var passwordInput = document.getElementById("password");
+      if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+      } else {
+          passwordInput.type = "password";
+      }
+    }
+</script>
+
+<style>
+  body{
+    background-color: #e8e8e8;
+  }
+
+  .navforlink{
+    font-family: 'Arial', sans-serif;
+    padding: 10px 20px;
+    border: none;
+  }
+
+  .navforlink:hover {
+    border: 1px solid black;
+    background-color: #876e6e;
+    padding: 10px;
+    border-radius: 10px;
+    transform: scale(1.05);
+  }
+
+  .txtLogincss{
+    font-family: Arial Black;
+  }
+
+  .txtLogincss .txtcss{
+    color: #9e2b2b;
+  }
+</style>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid" href="#">
+      <a class="navbar-brand mx-4 fw-bold logo" href="{{ url_for('.home_page') }}"><img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block " alt=""></a>
+
+      <button type="button" class="navbar-toggler my-3" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button>
+
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto nav-Act">
+          <a class="nav-item nav-link mx-2 my-2 navforlink text-center" href="{{ url_for('.home_page') }}" data-toggle="tooltip" title="Go Home Page"><i class="fa-solid fa-angles-left"></i>&ensp;<b>Back to Home</b></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+<div class="container">
+  <div class="row mt-3" style="height: 600px;">
+
+    <div class="col-sm d-flex justify-content-center align-items-center">
+     <div class="card bg-dark-subtle text-dark" style="width: 30rem;" >
+
+
+  <div class="card-body">
+    <form class='form-signin' id='log-user-form' name="loginn" action='/loginn' method='POST'  border='0'>
+        <div class="text-center">
+        <H1 class="fw-bold text-uppercase">Login</H1>
+        <p>Log-in now using your username & password.</p>
+        </div>
+              <div class="mb-3 mt-5">
+                <label for="username" class="form-label">Username</label>
+                <input type='text' name='username' id='username' class='form-control' placeholder='Username' required autofocus>
+              </div>
+
+              <div class="my-3">
+                <label for="password" class="form-label">Password</label>
+                <input type='password' name='password' id='password' class='form-control' placeholder='Password' required>
+              </div>
+
+              <div class="form-check form-switch my-3">
+                <label class="form-check-label text-body-tertiary" for="showPassword">Show Password</label>
+                <input class="form-check-input" type="checkbox" role="switch" id="showPassword" onclick="togglePasswordVisibility()" data-toggle="tooltip" title="Show the password">
+              </div>
+                <p><a class="link-offset-2 link-underline link-underline-opacity-0" href="{{ url_for('.Register_Customer') }}" data-toggle="tooltip" title="Create an account">Register</a></p>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-primary text-danger text-center alert-dismissible fade show" role="alert">
+             {{ message }}
+             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+              <div class="mb-3 my-4 border-top border-dark-subtle"><br>
+                  <button class='btn btn-lg btn-primary btn-block w-50' type='submit'>Sign in</button>
+                  <button class='btn btn-lg btn-warning btn-block' type='reset'>Reset</button>
+              </div>
+            </form>
+  </div>
+
+</div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <title>CRC</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+<style>
+  body{
+    background-color: #e8e8e8;
+    font-family: 'Arial', sans-serif;
+  }
+  .icon {
+    font-size: 100px; /* Adjust the size as needed */
+  }
+</style>
+</head>
+<body>
+
+  <div class="card text-center mx-4 my-4 bg-body-secondary">
+    <a class="d-flex justify-content-start mx-2 my-2" href="{{ url_for('.car_list') }}"><button type="button" class="btn-close bg-danger-subtle"></button></a>
+  <div class="card-body">
+    <h1 class="fw-bold">PROFILE</h1>
+    <h1>Welcome, {{session.FirstName}} {{session.LastName}}</h1>
+    <div class="border-bottom border-2 border-dark-subtle my-4"></div>
+    <h4>Personal Information</h4>
+
+      <div class="row my-4">
+        <div class="col-sm my-2">
+          <div class="card">
+
+            <ul class="list-group list-group-flush ">
+              <li class="list-group-item bg-dark-subtle"><h4>CRC ID #: {{session.CustomerID}}</h4></li>
+              <li class="list-group-item bg-dark-subtle"><h4>Gender: {{session.Gender}}</h4></li>
+              <li class="list-group-item bg-dark-subtle"><h4>Age: {{session.Age}}</h4></li>
+              <li class="list-group-item bg-dark-subtle"><h4>Address: {{session.Address}}</h4></li>
+            </ul>
+            </div>
+
+        </div>
+        <div class="col-sm my-2">
+          <div class="card bg-dark-subtle">
+
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item bg-dark-subtle"><h4>Email Address: {{session.EmailAddress}}</h4></li>
+              <li class="list-group-item bg-dark-subtle"><h4>Mobile Number: {{session.MobileNumber}}</h4></li>
+              <li class="list-group-item bg-dark-subtle"><h4>CRC User Name: {{session.UserName}}</h4></li>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+
+    <h4>ID PICTURE</h4>
+    <img src="{{ url_for('static', filename='Customer_ValidIdPicture/' + session.Valid_Id_Image) }}" alt="Image" class="" style="width: 25%;">
+
+  </div>
+</div>
+</body>
+</html>

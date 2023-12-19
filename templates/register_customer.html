@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <title>CRC</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const ageInput = document.getElementById("txtRCAge");
+      const age = parseFloat(ageInput.value);
+
+      // Check if the imageUpload input field has a value
+      const imageUpload = document.getElementById("imageUpload");
+      if (imageUpload && !imageUpload.files.length) {
+        Swal.fire({
+          title: "Please Upload Your Valid ID",
+          text: "You must upload a valid ID image.",
+          icon: "error",
+        });
+        return; // Stop form submission
+      }
+
+      if (age <= 18) {
+        Swal.fire({
+          title: "Age Not Allowed",
+          text: "You must be above 18 years old to register.",
+          icon: "error",
+        });
+      } else {
+        // Submit the form if age is allowed and an image is uploaded
+        form.submit();
+      }
+    });
+  });
+</script>
+<script>
+  function togglePasswordVisibility() {
+      var passwordInput = document.getElementById("txtRpassword");
+      if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+      } else {
+          passwordInput.type = "password";
+      }
+    }
+</script>
+
+<style>
+  body{
+    background-color: #e8e8e8;
+  }
+
+  .navforlink{
+    font-family: 'Arial', sans-serif;
+    padding: 10px 20px;
+    border: none;
+  }
+
+  .navforlink:hover {
+    border: 1px solid black;
+    background-color: #939e9e;
+    padding: 10px;
+    border-radius: 10px;
+    transform: scale(1.05);
+  }
+
+  .nav-Act .active{
+    background-color: #1fcac432;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .g-recaptcha {
+      transform: scale(0.77);
+      transform-origin: 0 0;
+  }
+
+  @media (max-width: 576px) {
+      .g-recaptcha {
+          transform: scale(0.6);
+      }
+  }
+</style>
+
+<body>
+    <!-- NUV BAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid mx-4">
+      <a class="navbar-brand fw-bold logo" href="{{ url_for('.home_page') }}"><img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block " alt=""></a>
+
+      <button type="button" class="navbar-toggler my-3" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button>
+
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto nav-Act">
+        <a class="nav-item nav-link mx-2 my-2 navforlink text-center" href="{{ url_for('.home_page') }}" data-toggle="tooltip" title="Go Home Page">Home</a>
+        <a class="nav-item nav-link mx-2 my-2 navforlink text-center" href="{{ url_for('.car_list') }}" data-toggle="tooltip" title="View Car List">Car List</a>
+        <a class="nav-item nav-link mx-2 my-2 navforlink active text-center" href="{{ url_for('.Register_Customer') }}" data-toggle="tooltip" title="Create an account">Register</a>
+        <a class="nav-item nav-link mx-2 my-2 navforlink text-center" href="{{ url_for('.Customer_LogIn') }}" data-toggle="tooltip" title="Sign In an account">Log In</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+    <div class="card my-5 mx-4 bg-dark-subtle" style="font-family: 'Arial', sans-serif;">
+        <div class="row">
+          <div class="col my-2">
+            <div class="text-uppercase mx-3 my-3 h2 border-bottom border-2 fw-bold">register</div>
+          </div>
+        </div>
+
+      <div class="card-body">
+
+         {% with messages = get_flashed_messages() %}
+           {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-primary">
+             <strong>{{ message }}</strong>
+           </div>
+          {% endfor %}
+           {% endif %}
+         {% endwith %}
+
+        <form action="{{ url_for('contact') }}" method="POST" enctype="multipart/form-data">
+
+    <!-- INSERT ROW FOR First name | Last name -->
+    <div class="row">
+      <div class="col-sm my-2">
+        <label for="txtRCusFName">First name *</label>
+        <input type="text" class="form-control input-user" name="txtRCusFName" id="txtRCusFName" required>
+      </div>
+      <div class="col-sm my-2">
+        <label for="txtRCusLName">Last name *</label>
+        <input type="text" class="form-control input-user" name="txtRCusLName" id="txtRCusLName" required>
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR Gender | Age -->
+    <div class="row">
+      <div class="col my-2">
+        <label for="cboRCGender">Gender *</label>
+        <select class="form-control text-center input-user" id="cboRCGender" name="cboRCGender" required>
+          <option></option>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+      <div class="col my-2">
+        <label for="txtRCAge">Age *</label>
+        <input type="number" step="any" class="form-control input-user"  name="txtRCAge" id="txtRCAge" min="1" max="100" required>
+      </div>
+    </div>
+
+<!-- INSERT ROW FOR Customer Address -->
+    <div class="row">
+      <div class="col my-2">
+        <label for="txtRAddress">Address *</label>
+        <textarea class="form-control input-user" name="txtRAddress" id="txtRAddress" required></textarea>
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR Email Address | Mobile Number -->
+    <div class="row">
+      <div class="col-sm my-2">
+        <label for="txtREmailAdd">Email Address *</label>
+        <input type="email" class="form-control input-user"  name="txtREmailAdd" id="txtREmailAdd" required>
+      </div>
+      <div class="col-sm my-2">
+        <label for="txtRMobileNo">Mobile Number * <small>Format: 09XXXXXXXXX or +639XXXXXXXXX</small></label>
+        <input type="tel" step="any" class="form-control input-user"  name="txtRMobileNo" id="txtRMobileNo" pattern="^(09|\+639)\d{9}$" required>
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR Useernam | Password -->
+    <div class="row">
+      <div class="col-sm my-2">
+        <label for="txtRusername">User name * <small>Format : (lowercase letters, 8 characters and at least one number)</small></label>
+        <input type="text" class="form-control input-user" name="txtRusername" id="txtRusername" pattern="^(?=.*[a-z])(?=.*[0-9])[a-z0-9]+$" minlength="8" required>
+      </div>
+      <div class="col-sm my-2">
+        <label for="txtRpassword">Password * <small>Format : (no spaces, and at least 8 characters)</small></label>
+        <input type="password" class="form-control input-user" name="txtRpassword" id="txtRpassword" pattern="^\S+$" minlength="8" required>
+
+        <div class="form-check form-switch mt-2">
+          <label class="form-check-label text-black-50" for="showPassword">Show Password</label>
+          <input class="form-check-input" type="checkbox" role="switch" id="showPassword" onclick="togglePasswordVisibility()">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm mb-2">
+        <label for="imageUpload" class="form-label">Upload a valid ID: *</label>
+         <input class="form-control" type="file" name="imageUpload" id="imageUpload" accept="image/*">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm my-2">
+        <div class="g-recaptcha" data-sitekey="{{ sitekey }}"></div>
+        <p class="text-center text-body-tertiary">Note: make sure you should Check "I am not a robot." for Validation.</p>
+        <button type="submit" class="form-control btn btn-warning mb-2 btn-lg" id="btnSubmit">Submit</button>
+      </div>
+    </div>
+
+   </form>
+      </div>
+    </div>
+</body>
+</html>

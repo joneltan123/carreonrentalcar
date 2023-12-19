@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CRC | ADMIN</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+</head>
+<style>
+  body{
+    background-color: #404158;
+
+  }
+    .cust_name{
+      color: rgb(72, 92, 137);
+    }
+</style>
+<body>
+
+<div class="d-flex justify-content-center align-items-center">
+  <div class="card border border-dark-subtle border-3 bg-dark-subtle rounded-4 shadow-lg my-3" style="width: 50rem;">
+    <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <a class="" href="{{ url_for('.admin_booking_ongoing') }}"><button type="button" class="btn-close bg-danger-subtle"></button></a>
+        <img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block">
+      </div>
+
+      <h2 class="card-title text-info-emphasis text-center">Ongoing Booked</h2>
+      <p class="border-bottom border-secondary border-3 text-center text-body-tertiary"><small>Customer Status</small></p>
+      <h3 class="card-title mt-3 cust_name fw-bold text-center">{{ row['Last_Name'] }}, {{ row['First_Name'] }}</h3>
+      <p class="text-center text-body-tertiary"><small>Customer Name</small></p>
+
+      <div class="d-flex justify-content-center">
+          <table id="data" class="table table-hover table-sm responsive border border-primary-subtle table-secondary border-3 w-75">
+
+            <tr>
+              <th><center>Name of Car:</center></th>
+              <td><center>{{ row['Car_Name'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Gender:</center></th>
+              <td><center>{{ row['Gender'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Age:</center></th>
+              <td><center>{{ row['Age'] }} y/o</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Address:</center></th>
+              <td><center>{{ row['Address'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Email Address:</center></th>
+              <td><center>{{ row['Email_Address'] }}</center></td>
+            </tr>
+
+
+
+            <tr>
+              <th><center>Mobile Number:</center></th>
+              <td><center>{{ row['Mobile_Number'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Date of Pickup:</center></th>
+              <td><center>{{ row['Date_of_pickup'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Date of Return:</center></th>
+              <td><center>{{ row['Date_of_return'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Time of Pickup:</center></th>
+              <td><center>{{ row['Time_of_pickup'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>No of Days:</center></th>
+              <td><center>{{ row['No_of_Days'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Car Per-Days:</center></th>
+              <td><center>{{ row['Car_per_days'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Transaction ID:</center></th>
+              <td><center>{{ row['Transaction_ID'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Amount to pay:</center></th>
+              <td><center>{{ row['Amount_to_Pay'] }}</center></td>
+            </tr>
+
+            <tr>
+              <th><center>Down Payment:</center></th>
+              <td><center>{{ row['Down_Payment'] }}</center></td>
+            </tr>
+
+          </table>
+          </div>
+          <p class="text-center mx-5 fs-5 text-decoration-underline">Total Amount To Pay: <b> &#8369; {{ row['Total_Amount_to_Pay'] }}</b></p>
+
+          <h3 class="card-title mt-5 cust_name fw-bold text-center border-top border-secondary border-3">Customer ID Image</h3>
+          <center><img src="{{ url_for('static', filename='Customer_ValidIdPicture/' + row['Id_Image']) }}" alt="" class="img-fluid my-3" style="width: 75%;"></center>
+    </div>
+          <div class="form-group my-2 mx-4">
+            <button type="button" class="form-control btn btn-warning mb-2 btn-lg" id="btnDownload">Download As PDF</button>
+          </div>
+  </div>
+</div>
+<script>
+    document.getElementById('btnDownload').addEventListener('click', function() {
+        // Hide the button when printing starts
+        this.style.display = 'none';
+
+        // Use the window.print() function to trigger the print dialog
+        window.print();
+
+        // Show the button again when printing is canceled or completed
+        this.style.display = 'block';
+    });
+</script>
+</body>
+</html>

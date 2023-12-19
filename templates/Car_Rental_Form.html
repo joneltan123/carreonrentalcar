@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRC</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- link for popup Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+<style>
+  .hidden {
+    display: none;
+  }
+
+  .fill-in {
+    background: linear-gradient(45deg, #b4b4bdea 0%, #8c9da6 100%);
+    color: rgba(0, 0, 0, 0.64);
+    font-family: 'Arial', sans-serif;
+  }
+
+  body{
+    background-color: #e8e8e8;
+  }
+
+  .back-button {
+    background-color: #707070;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: 'Arial', sans-serif;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+  }
+
+  .back-button:hover {
+    background-color: #c46d6d;
+    color: black;
+  }
+
+  .submit-button {
+    width: 100%;
+    height: 60px;
+    border: 1px solid #dad293;
+    border-radius: 10px;
+    transition: all 0.3s;
+    cursor: pointer;
+    background: rgb(114, 133, 130);
+    font-size: 1.2em;
+    font-weight: 550;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .submit-button:hover {
+    background: #315cfd;
+    color: white;
+    font-size: 1.5em;
+  }
+
+  .input-user {
+    width: 100%;
+    font-size: 16px;
+    font-family: inherit;
+    box-shadow: 0 0 0 1px #f1f1f1;
+    border: none;
+    border-radius: 10px;
+    background-color: #e2e2e2;
+    transition: all .3s;
+  }
+
+  .input-user:focus {
+    outline: none;
+    box-shadow: 0 0 10px 1px #f1f1f1;
+    border: none;
+    transition: all .3s;
+  }
+
+  .form-s{
+    border: 2px solid rgb(197, 197, 197);
+  }
+</style>
+
+<script> //Script for DOWN-PEYMENT ---- if customer will not pay down payment ------
+  function validateForm() {
+    var textBox = document.getElementById("paypal_id");
+    var txtpaypal_id = textBox.value.trim();
+
+    if (txtpaypal_id === "") {
+      Swal.fire({
+        icon: 'error',
+        title: 'Need A Down-Payment',
+        text: 'You need to pay down-payment.',
+      });
+      return false; // Prevent form submission
+    }
+    Swal.fire({
+        icon: 'success',
+        title: 'Rent Car Success',
+        text: 'Information Saved.',
+      });
+    return true; // Allow form submission
+  }
+</script>
+<script> //Script for [Return Date]--[Total Amount to Pay]--[PayPal Down Payment]
+    function calculateReturnDate() {
+      const pickupDate = new Date(document.getElementById("txtPUpDate").value);
+      const numDays = parseFloat(document.getElementById("txtNoDayRent").value);
+      if (!isNaN(numDays) && pickupDate instanceof Date && !isNaN(pickupDate.getTime())) {
+        const returnDate = new Date(pickupDate);
+        returnDate.setDate(returnDate.getDate() + numDays);
+        document.getElementById("returnDate").valueAsDate = returnDate;
+
+        // Calculate total amount to pay
+        const perDayRate = parseFloat(document.getElementById("cbocarPDay").value.replace(/[^0-9.-]+/g, ""));
+      if (!isNaN(perDayRate)) {
+        const totalAmount = numDays * perDayRate;
+        document.getElementById("txtTotalAmount").value = totalAmount.toFixed(2);
+
+        // Calculate PayPal down payment (50%)
+        const paypalDownPayment = totalAmount * 0.5;
+        document.getElementById("txtPayPalDownPayment").value = paypalDownPayment.toFixed(2);
+      }
+      }
+    }
+</script>
+</head>
+
+<body>
+  <!-- INSERT NAV BAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid mx-4">
+      <a class="navbar-brand fw-bold logo" href="#">
+      <img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="100" height="45" class="d-inline-block " alt=""></a>
+
+      <button type="button" class="navbar-toggler my-3" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button>
+
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto nav-Act">
+          <a href="{{ url_for('.car_list') }}" class="back-button mx-2 nav-item nav-link mx-2 my-2 navforlink fw-bold"><i class="fa-solid fa-angles-left"></i>&ensp;back</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- INSERT POST METHOD -->
+  <div class="card-body">
+  <form action="/save_rental_Info" method="POST" name="frmUser" id="frmUser" onsubmit="return validateForm()">
+
+  <div class="row mx-3 my-3 form-s"><!-- Start FOR ROW 1 -->
+  <div class="col-sm-8 fill-in"><!-- Start FOR COLUMN 1 -->
+
+    <div class="row my-3">
+      <div class="col-sm">
+        <div class="border-bottom border-dark-subtle border-2"><h5><b>CUSTOMER INFORMATION</b></h5></div>
+      </div>
+    </div>
+    <!-- INSERT ROW FOR Customer ID -->
+    <div class="row">
+      <div class="col-sm-2 my-2 text-center">
+        <input type="text" readonly class="form-control-plaintext text-center h5 fw-bold" name="txtCustomerID" id="txtCustomerID" value="{{session.CustomerID}}">
+        <label for="txtCustomerID">CRC Customer ID </label>
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR First name | Last name -->
+    <div class="row">
+      <div class="col-sm my-2">
+        <label for="txtCusFName">First name * </label>
+        <input type="text" class="form-control input-user text-black-50" name="txtCusFName" id="txtCusFName" placeholder="First name *" value="{{session.FirstName}}" readonly>
+      </div>
+      <div class="col-sm my-2">
+        <label for="txtCusLName">Last name *</label>
+        <input type="text" class="form-control input-user text-black-50" name="txtCusLName" id="txtCusLName" placeholder="Last name *" value="{{session.LastName}}" readonly>
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR Gender | Age -->
+    <div class="row">
+      <div class="col my-2">
+        <label for="cboCGender">Gender *</label>
+        <input type="text" class="form-control input-user text-black-50" name="cboCGender" id="cboCGender" placeholder="Last name *" value="{{session.Gender}}" readonly>
+      </div>
+      <div class="col my-2">
+        <label for="txtCAge">Age *</label>
+        <input type="number" step="any" class="form-control input-user text-black-50" name="txtCAge" id="txtCAge" value="{{session.Age}}" min="1" max="100" readonly >
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR Customer Address -->
+    <div class="row">
+      <div class="col my-2">
+        <label for="txtAddress">Address *</label>
+        <textarea class="form-control input-user text-black-50" name="txtAddress" id="txtAddress" placeholder="Enter home address *" readonly>{{session.Address}}</textarea>
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR Email Address | Mobile Number -->
+    <div class="row">
+      <div class="col-sm my-2">
+        <label for="txtEmailAdd">Email Address *</label>
+        <input type="email" class="form-control input-user text-black-50"  name="txtEmailAdd" id="txtEmailAdd" placeholder="Enter email address *" value="{{session.EmailAddress}}" readonly>
+      </div>
+      <div class="col-sm my-2">
+        <label for="txtMobileNo">Mobile Number * <small>Format: 09XXXXXXXXX or +639XXXXXXXXX</small></label>
+        <input type="tel" step="any" class="form-control input-user text-black-50"  name="txtMobileNo" id="txtMobileNo" placeholder="Enter mobile number *" pattern="^(09|\+639)\d{9}$" value="{{session.MobileNumber}}" readonly >
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR Day Of Pickup | Time Of Pickup | No Of Days -->
+    <div class="row">
+      <div class="col-sm my-2">
+        <label for="txtPUpDate">Day of Pickup *</label>
+        <input type="date" class="form-control input-user"  name="txtPUpDate" id="txtPUpDate" onchange="calculateReturnDate()" placeholder="" required>
+      </div>
+      <div class="col-sm my-2">
+        <label for="txtMobileNo">Time of Pickup *</label>
+        <input type="time" class="form-control input-user" name="txtPUpTime" id="txtPUpTime" required>
+      </div>
+      <div class="col-sm my-2">
+        <label for="txtMobileNo">No of Days *</label>
+        <input type="number" step="any" class="form-control input-user"  name="txtNoDayRent" id="txtNoDayRent" onchange="calculateReturnDate()" min="1" max="30" required>
+      </div>
+    </div>
+
+    <!-- INSERT ROW FOR Return Date | Total Amount to Pay | PayPal Down Payment (50%) READONLY -->
+    <div class="card my-3 shadow bg-secondary border border-dark-subtle border-2">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm">
+            <label for="returnDate">Return Date:</label>
+            <input type="date" class="form-control input-user" id="returnDate" name="returnDate" readonly>
+          </div>
+          <div class="col-sm">
+            <label for="txtTotalAmount">Total Amount to Pay:</label>
+            <input type="number" step="any" class="form-control input-user" id="txtTotalAmount" name="txtTotalAmount" readonly>
+          </div>
+          <div class="col-sm">
+            <label for="txtPayPalDownPayment">PayPal Down Payment (50%):</label>
+            <input type="number" step="any" class="form-control input-user" id="txtPayPalDownPayment" name="txtPayPalDownPayment" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end FOR COLUMN 1 -->
+
+  <div class="col-sm-4 border-start" style="background-color: #758b9c;"> <!-- Start FOR COLUMN 2 -->
+
+    <div class="card my-4 text-center mx-3 d-flex justify-content-center border border-dark-subtle border-2" style="background-color: #6c8ca5;">
+      <div class="my-2 text-muted">
+        <img src="{{ url_for('static', filename='image/' + rows[0]['Image']) }}" alt="Image" class="" style="width: 50%;">
+        <h5 class="card-title fw-bold">{{ rows[0]['Car_Name'] }}</h5>
+
+        <div class="row mx-1">
+          <div class="col">
+            <small><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+              Manila | Pampanga<br>&#8369; {{ rows[0]['Car_Price_NoPromo'] }} | Per-Day<br>No Driver | No Gas</small>
+          </div>
+          <div class="col">
+            <small><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+              Manila | Pampanga <br>&#8369; {{ rows[0]['Car_Price_WithPromo'] }} | Per-Day<br>With Driver | Gas | Toll Gate</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="blob mx-2 my-2">
+        <!-- INSERT COMBO-BOX For RENT PER-DAY -->
+        <select class="form-control text-center input-user" id="cbocarPDay" name="cbocarPDay" onchange="calculateReturnDate()" required>
+          <option>Choose Per-Day</option>
+          <option value="{{ rows[0]['Car_Price_NoPromo'] }}">{{ rows[0]['Car_Price_NoPromo'] }}</option>
+          <option value="{{ rows[0]['Car_Price_WithPromo'] }}">{{ rows[0]['Car_Price_WithPromo'] }}</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- INSERT HIDDEN TEXT-BOX For PAYPAL -->
+    <div class="input-group hidden">
+      <div class="input-group-prepend">
+        <div class="input-group-text">PayPal ID</div>
+      </div>
+      <input type="text" class="form-control text-center text-muted" id="paypal_id" name="txtpaypal_id" placeholder="Pay Down Payment In PayPal" readonly/>
+      <input type="text" class="form-control text-center text-muted" id="txtvalid_IdImage" name="txtvalid_IdImage" value="{{session.Valid_Id_Image}}" readonly/>
+      <input type="text" class="form-control text-center text-muted" id="txtCarName" name="txtCarName" value="{{ rows[0]['Car_Name'] }}" readonly/>
+      <input type="text" class="form-control text-center text-muted" id="txtCarNo" name="txtCarNo" value="{{ rows[0]['CarNo'] }}" readonly/>
+    </div>
+
+    <!-- INSERT BORDER -->
+    <div class="border-top border-dark-subtle border-2"></div>
+
+    <div class=" my-3 mx-2 ">
+      <!-- INSERT PAYPAL BUTTON -->
+      <div id="paypal-button-container"></div>
+
+      <!-- INSERT SUBMIT BUTTON -->
+      <button type="submit" class="form-control btn btn-success btn-lg submit-button" id="btnSubmit">SUBMIT RECORD</button>
+    </div>
+
+  </div> <!-- end FOR COLUMN 2 -->
+  </div> <!-- Start FOR ROW 1 -->
+
+  </form>
+ 
+    <div class="col-sm my-3">
+      <div class="card mx-3"><!-- INSERT CARD FOR DATE NOT AVAILABLE -->
+        <div class="card-header bg-primary-subtle text-dark border border-dark border-3">
+          <h4 class="text-center fw-bold">ALL DATE NOT AVAILABLE</h4>
+        </div>
+        <div class="card-body bg-dark text-white">
+        <h5 class="card-title"><span>Dates have been booked.</span></h5>
+
+          {% block content %}
+          <div class="table-wrap my-2 ">
+            <table id="data" class="table table table-dark table-hover table-responsive-sm my-2 w-100 ">
+              <thead class="table-info">
+                <tr>
+                  <th>Pickup Date</th>
+                  <th>Pickup Return</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in rows %}
+                <tr>
+                  <td>{{ user['Date_of_pickup'] }}</td>
+                  <td>{{ user['Date_of_return'] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- INSERT SCRIPT FOR PAYPAL CLIENT ID -->
+  <script src="https://www.paypal.com/sdk/js?client-id=ATY9AzMnQeggepUzvtUxFiFYnhCRQaV6_605VYWQhv4YpTPzSvooIhhoE-B5Vx_6vC4yW2PNUDl5j6RG&currency=PHP"></script>
+  <!-- INSERT SCRIPT FOR PAYPAL BUTTON FUNCTION -->
+  <script>
+    const paypalAmountInput = document.getElementById('txtPayPalDownPayment');
+    paypal.Buttons({
+      style: {
+        layout: 'horizontal'
+          },
+        createOrder: function(data, actions) {
+            if (!validateForm2()) {
+              return false;
+            }
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: paypalAmountInput.value // Replace with your item's price
+                }
+              }]
+            });
+        },
+    onApprove: function(data, actions) {
+      // Perform additional processing with the form data if needed
+      return actions.order.capture().then(function(orderData) {
+        console. log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+        const transaction = orderData.purchase_units[0].payments.captures[0];
+        alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+        document.getElementById("paypal_id").value = transaction.id;
+          });
+                    }
+        }).render('#paypal-button-container');
+
+    function validateForm2() {
+      var fname = document.getElementById('txtCusFName').value;
+      var lname = document.getElementById('txtCusLName').value;
+      var gender = document.getElementById('cboCGender').value;
+      var age = document.getElementById('txtCAge').value;
+      var address = document.getElementById('txtAddress').value;
+      var EmailAdd = document.getElementById('txtEmailAdd').value;
+      var mobilenum = document.getElementById('txtMobileNo').value;
+      var pupdate = document.getElementById('txtPUpDate').value;
+      var puptime = document.getElementById('txtPUpTime').value;
+      var numdayrent = document.getElementById('txtNoDayRent').value;
+      var carperday = document.getElementById('cbocarPDay').value;
+
+      var currentDate = new Date();
+      var selectedDate = new Date(pupdate);
+
+      //INSERT if statement that if all need for customer = NULL
+      if (fname === "" || lname === "" || gender === "" || age === "" || address === ""  || EmailAdd === "" || mobilenum === "" || pupdate === "" || puptime === "" || numdayrent === "" || carperday === "Choose Per-Day") {
+        Swal.fire({
+        icon: 'error',
+        title: 'Information not complete',
+        text: 'You need to fill-in all the information.',
+        timer: 1500,
+
+      });
+          return false;
+      }
+      //INSERT if statement for AGE
+      if (age <= 18){
+          Swal.fire({
+          icon: 'error',
+          title: 'Your Age is not allow',
+          text: 'Age 18 years old and below are not allowed to rent a car.',
+          timer: 1500,
+
+        });
+            return false;
+        }
+      //INSERT if statement that if date is has been ended
+      if (selectedDate < currentDate) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Date has been ended',
+          text: 'You need to check your date.',
+          timer: 1500,
+
+        });
+            return false;
+        }
+
+      var databaseDates = [{% for user in rows %} {pickup: "{{ user['Date_of_pickup'] }}", return: "{{ user['Date_of_return'] }}"}, {% endfor %}];
+
+      const chosenPickupDate = new Date(document.getElementById("txtPUpDate").value);
+      const chosenReturnDate = new Date(document.getElementById("returnDate").value);
+
+      for (const rental of databaseDates) {
+        const existingPickupDate = new Date(rental.pickup);
+        const existingReturnDate = new Date(rental.return);
+          if (
+            (chosenPickupDate >= existingPickupDate && chosenPickupDate <= existingReturnDate) ||
+            (chosenReturnDate >= existingPickupDate && chosenReturnDate <= existingReturnDate) ||
+            (chosenPickupDate <= existingPickupDate && chosenReturnDate >= existingReturnDate)
+            ) {
+              Swal.fire({
+              icon: 'error',
+              title: 'Date is NOT available',
+              text: 'The date you entered is no longer available. Choose a different rental date.',
+              timer: 1500,
+
+            });
+            return false;
+                }
+                }
+      //INSERT if statement that if number of days is = 0 or less
+      if (numdayrent <= 0){
+        Swal.fire({
+        icon: 'error',
+        title: 'Number days is not allow',
+        text: 'Number of rental days is not possible.',
+        timer: 1500,
+      });
+          return false;
+      }
+        return true;
+      }
+
+  </script>
+  {% endblock %}
+
+</body>
+</html>

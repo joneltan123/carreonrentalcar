@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRC | ADMIN</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/WEB-icon.png') }}" type="x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css-5.3.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js-5.3.1/bootstrap.js') }}"></script>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<style>
+  body{
+    background-color: #404158;
+    font-family: 'Arial', sans-serif;
+
+  }
+    .cust_name{
+      color: rgb(72, 92, 137);
+    }
+</style>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm d-flex justify-content-center align-items-center">
+
+      <div class="card border border-dark-subtle border-3 bg-dark-subtle rounded-4 shadow-lg my-4" style="width: 50rem;">
+        <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <a class="" href="{{ url_for('.View_Admin_CarList') }}"><button type="button" class="btn-close bg-danger-subtle"></button></a>
+          <img src="{{ url_for('static', filename='image/CRC-LOGO.png') }}" width="80" height="40" class="d-inline-block">
+        </div>
+          <div class="card-title text-center fw-bold my-2"><div class="text-info-emphasis h3">{{ row['Car_Name'] }}</div><div class="text-body-tertiary ">Car Name</div></div>
+          <div class="border-bottom border-2 border-dark-subtle"></div>
+          <center><img src="{{ url_for('static', filename='image/' + row['Image']) }}" alt="" class="img-fluid my-3" style="width: 75%;"></center>
+        </div>
+
+        <div class="container d-flex justify-content-center align-items-center">
+          <div class="row text-center w-100">
+            <div class="col-sm my-2">
+
+              <div class="card bg-body-secondary">
+                <div class="card-body">
+                  <h5 class="card-title">Manila | Pampanga</h5>
+                  <h6 class="card-subtitle mb-3 text-body-secondary">Location</h6>
+                  <p class="card-text border-top border-2">&#8369; {{ row['Car_Price_NoPromo'] }} | Per-Day<br>No Driver | No Gas</p>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-sm my-2">
+
+              <div class="card bg-body-secondary">
+                <div class="card-body">
+                  <h5 class="card-title">Manila | Pampanga</h5>
+                  <h6 class="card-subtitle mb-3 text-body-secondary">Location</h6>
+                  <p class="card-text border-top border-2">&#8369; {{ row['Car_Price_WithPromo'] }} | Per-Day<br>With Driver | Gas | Toll Gate</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+            <div class="form-group my-2 mx-4">
+              <button type="button" class="form-control btn btn-secondary mb-2 btn-lg" id="btnDownload">Download As PDF</button>
+            </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+    document.getElementById('btnDownload').addEventListener('click', function() {
+        // Hide the button when printing starts
+        this.style.display = 'none';
+
+        // Use the window.print() function to trigger the print dialog
+        window.print();
+
+        // Show the button again when printing is canceled or completed
+        this.style.display = 'block';
+    });
+</script>
+</body>
+</html>
